@@ -4,36 +4,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings | ReRun</title>
-    <!-- Loads the CSS file from the profile app so we don't have to duplicate it! -->
+    <title>Settings | ReqClub</title>
     <link rel="stylesheet" href="{% static 'css/user_profile/profile.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <nav>
-        <div class="nav-brand"><a href="{% url 'home:home' %}" style="text-decoration: none; color: inherit;">ReqClub</a></div>
-        <a href="{% url 'home:home' %}" class="back-link">Back to Dashboard</a>
-    </nav>
-    
-    <div class="container">
-        <div class="settings-card">
-            <h2>Account Settings</h2>
+<body class="bg-slate-100 text-slate-900 min-h-screen font-sans pb-12">
+
+    <!-- STICKY TOP NAVBAR -->
+    <header class="bg-white sticky top-0 z-30 shadow-sm border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <nav class="flex items-center justify-between py-3.5">
+                <!-- Brand / Logo -->
+                <a href="{% url 'home:home' %}" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900 no-underline">
+                    <span class="w-8 h-8 rounded-xl bg-[#FBBF24] flex items-center justify-center text-white text-sm shadow-sm">
+                        <i class="fa-solid fa-person-running"></i>
+                    </span>
+                    <span>Req<span class="text-[#FBBF24]">Club</span></span>
+                </a>
+
+                <!-- Back to Dashboard Link -->
+                <a href="{% url 'home:home' %}" class="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 rounded-xl transition no-underline">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Dashboard</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-xl mx-auto px-4 sm:px-6 mt-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 sm:p-8">
             
-            <form method="post">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-5 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-[#FBBF24] border border-amber-200/60 flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-900">Account Settings</h2>
+                    <p class="text-xs text-slate-500 font-medium">Manage your app preferences and notifications</p>
+                </div>
+            </div>
+            
+            <form method="post" class="space-y-6">
                 {% csrf_token %}
                 
-                <div class="form-group" style="flex-direction: row; align-items: center; justify-content: space-between;">
-                    <label style="margin-bottom: 0;">Enable Dark Mode</label>
-                    <input type="checkbox" name="dark_mode" {% if settings.dark_mode %}checked{% endif %}>
+                <!-- Dark Mode Toggle Row -->
+                <div class="flex items-center justify-between py-2">
+                    <div>
+                        <span class="block text-sm font-bold text-slate-800">Enable Dark Mode</span>
+                        <span class="block text-xs text-slate-400 font-medium">Switch between light and dark themes</span>
+                    </div>
+                    <input type="checkbox" name="dark_mode" {% if settings.dark_mode %}checked{% endif %}
+                           class="w-5 h-5 accent-[#FBBF24] rounded cursor-pointer transition">
                 </div>
                 
-                <div class="form-group" style="flex-direction: row; align-items: center; justify-content: space-between; border-top: 1px solid #E8E8E8; padding-top: 20px;">
-                    <label style="margin-bottom: 0;">Email Notifications</label>
-                    <input type="checkbox" name="email_notifications" {% if settings.email_notifications %}checked{% endif %}>
+                <!-- Email Notifications Toggle Row -->
+                <div class="flex items-center justify-between py-2 border-t border-slate-100 pt-6">
+                    <div>
+                        <span class="block text-sm font-bold text-slate-800">Email Notifications</span>
+                        <span class="block text-xs text-slate-400 font-medium">Receive updates about upcoming runs and events</span>
+                    </div>
+                    <input type="checkbox" name="email_notifications" {% if settings.email_notifications %}checked{% endif %}
+                           class="w-5 h-5 accent-[#FBBF24] rounded cursor-pointer transition">
                 </div>
                 
-                <button type="submit" class="save-btn" style="margin-top: 30px;">Save Preferences</button>
+                <!-- Save Button -->
+                <div class="pt-4">
+                    <button type="submit" class="w-full py-3 px-4 rounded-xl text-sm font-bold bg-[#FBBF24] text-slate-900 hover:bg-[#e0a81e] shadow-sm hover:shadow transition">
+                        Save Preferences
+                    </button>
+                </div>
             </form>
+
         </div>
-    </div>
+    </main>
+
 </body>
 </html>
