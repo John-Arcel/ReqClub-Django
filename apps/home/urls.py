@@ -1,8 +1,9 @@
-from django.urls import path 
-from .views import home_view 
- 
-app_name = "home" 
- 
-urlpatterns = [ 
-    path("", home_view, name="home"), 
+from django.urls import path
+from . import views
+
+app_name = "home"
+
+urlpatterns = [
+    path("", views.home_dashboard, name="home"),
+    path("runs/<int:run_id>/toggle-join/", views.toggle_join_run, name="toggle_join_run"),
 ]

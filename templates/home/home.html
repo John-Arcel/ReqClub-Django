@@ -4,40 +4,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | ReRun</title>
+    <title>Home | ReqClub</title>
     <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body>
-    <nav>
-        <div class="nav-brand">ReqClub</div>
-        
-        <div class="nav-links">
-            <!-- Link to user_profile -->
-            <a href="{% url 'user_profile:profile' %}" class="icon-btn" title="Profile">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-            </a>
+<body class="bg-slate-100 text-slate-900 min-h-screen pb-28 font-sans">
+
+    <!-- STICKY TOP NAVBAR & DASHBOARD CONTROLS -->
+    <header class="bg-white sticky top-0 z-30 shadow-sm border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
             
-            <!-- Link perfectly updated to user_setting -->
-            <a href="{% url 'user_setting:settings' %}" class="icon-btn" title="Settings">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
-            </a>
-            
-            <form action="{% url 'login:logout' %}" method="post" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="logout-btn">Logout</button>
+            <!-- Top Row: Brand + User Profile / Settings / Logout -->
+            <nav class="flex items-center justify-between py-3.5 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                    <a href="?" class="nav-brand flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900">
+                        <span class="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center text-white text-sm shadow-sm">
+                            <i class="fa-solid fa-person-running"></i>
+                        </span>
+                        <span>Req<span class="text-emerald-500">Club</span></span>
+                    </a>
+                    <span class="hidden sm:inline-block text-xs font-semibold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">
+                        Hi, {{ user.username }}
+                    </span>
+                </div>
+
+                <!-- Your Existing Profile, Settings & Logout Links -->
+                <div class="nav-links flex items-center gap-3">
+                    <!-- Link to user_profile -->
+                    <a href="{% url 'user_profile:profile' %}" class="icon-btn p-2 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition" title="Profile">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+
+                    <!-- Link to user_setting -->
+                    <a href="{% url 'user_setting:settings' %}" class="icon-btn p-2 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition" title="Settings">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </a>
+
+                    <!-- Logout Form -->
+                    <form action="{% url 'login:logout' %}" method="post" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-50 text-rose-600 hover:bg-rose-100 transition">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </nav>
+
+            <!-- Sub-Header: Location Radius & Run Type Selector -->
+            <div class="flex items-center justify-between py-2.5 text-xs sm:text-sm font-semibold text-slate-700 border-b border-slate-100">
+                <button type="button" class="flex items-center gap-1.5 hover:text-slate-900 transition">
+                    <i class="fa-solid fa-location-arrow text-emerald-500 text-xs"></i>
+                    <span>Near Home • 5 km</span>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                </button>
+
+                <form method="GET" action="" class="inline-block">
+                    <input type="hidden" name="date" value="{{ selected_date }}">
+                    {% if search_query %}
+                        <input type="hidden" name="q" value="{{ search_query }}">
+                    {% endif %}
+                    <select name="type" onchange="this.form.submit()" class="bg-transparent font-semibold text-slate-700 hover:text-slate-900 focus:outline-none cursor-pointer">
+                        <option value="">All Run Types</option>
+                        {% for r_type in run_types %}
+                            <option value="{{ r_type }}" {% if run_type_filter == r_type %}selected{% endif %}>
+                                {{ r_type }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+
+            <!-- Reclub-Style Category Tabs -->
+            <div class="flex items-center justify-between sm:justify-start sm:gap-10 text-xs sm:text-sm font-semibold tracking-wider text-slate-500 border-b border-slate-100 pt-1">
+                <a href="#" class="py-2.5 hover:text-slate-800 transition">CLUBS</a>
+                <a href="?" class="py-2.5 text-indigo-600 border-b-2 border-indigo-600 font-bold">MEETS</a>
+                <a href="#" class="py-2.5 hover:text-slate-800 transition">RACES</a>
+                <a href="#" class="py-2.5 hover:text-slate-800 transition">ROUTES</a>
+                <a href="#" class="py-2.5 hover:text-slate-800 transition">RUNNERS</a>
+            </div>
+
+            <!-- Horizontal 7-Day Date Strip -->
+            <div class="py-3 flex items-center gap-2.5 overflow-x-auto no-scrollbar">
+                <button type="button" onclick="document.getElementById('searchInput').focus()" class="relative flex-shrink-0 w-14 h-16 rounded-2xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition">
+                    <i class="fa-solid fa-sliders text-lg"></i>
+                    {% if run_type_filter or search_query %}
+                        <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-indigo-600 rounded-full ring-2 ring-white"></span>
+                    {% endif %}
+                </button>
+
+                {% for day in date_strip %}
+                    <a href="?date={{ day.full_date }}{% if run_type_filter %}&type={{ run_type_filter }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="flex-shrink-0 w-16 h-16 rounded-2xl flex flex-col items-center justify-center transition shadow-sm border
+                              {% if day.is_selected %}
+                                  bg-emerald-500 text-white border-emerald-500 font-bold shadow-emerald-500/20
+                              {% else %}
+                                  bg-white text-slate-700 border-slate-200/80 hover:border-slate-300 hover:bg-slate-50
+                              {% endif %}">
+                        <span class="text-[11px] uppercase tracking-wider {% if day.is_selected %}text-emerald-50{% else %}text-slate-400 font-medium{% endif %}">
+                            {{ day.day_name }}
+                        </span>
+                        <span class="text-lg leading-tight mt-0.5 font-bold">
+                            {{ day.day_number }}
+                        </span>
+                    </a>
+                {% endfor %}
+            </div>
+
+        </div>
+    </header>
+
+    <!-- MAIN RUNS FEED -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 mt-4 space-y-4">
+
+        {% if grouped_runs %}
+            {% for group in grouped_runs %}
+                <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+                    
+                    <!-- Collapsible Time Header (e.g. 4:05 PM | 1 meet) -->
+                    <button type="button"
+                            onclick="toggleTimeSlot('slot-{{ forloop.counter }}', 'chevron-{{ forloop.counter }}')"
+                            class="w-full px-5 py-3.5 bg-slate-50/70 border-b border-slate-100 flex items-center justify-between text-left hover:bg-slate-100/60 transition">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base sm:text-lg font-extrabold text-slate-900">{{ group.time_label }}</span>
+                            <span class="text-slate-300">|</span>
+                            <span class="text-sm sm:text-base text-slate-500 font-medium">{{ group.count }} meet{{ group.count|pluralize }}</span>
+                        </div>
+                        <i id="chevron-{{ forloop.counter }}" class="fa-solid fa-chevron-down text-slate-500 text-sm transition-transform duration-200"></i>
+                    </button>
+
+                    <!-- Run Cards inside Time Slot -->
+                    <div id="slot-{{ forloop.counter }}" class="divide-y divide-slate-100">
+                        {% for post in group.posts %}
+                            <article class="p-4 sm:px-6 sm:py-5 hover:bg-slate-50/80 transition flex items-center justify-between gap-4">
+                                <div class="flex items-start gap-3.5 sm:gap-4 min-w-0 flex-1">
+                                    
+                                    <!-- Club Avatar -->
+                                    {% if post.club.logo_url %}
+                                        <img src="{{ post.club.logo_url }}" alt="{{ post.club.name }}"
+                                             class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-slate-200 mt-0.5">
+                                    {% else %}
+                                        <div class="w-12 h-12 rounded-full {{ post.club.avatar_Bg }} text-white flex items-center justify-center font-extrabold text-sm flex-shrink-0 mt-0.5 shadow-sm">
+                                            {{ post.club.initials }}
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Run Details -->
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400 truncate">
+                                            {{ post.club.name }}
+                                        </p>
+                                        <h3 class="text-base sm:text-lg font-extrabold text-slate-900 truncate mt-0.5">
+                                            {{ post.title }}
+                                        </h3>
+                                        <div class="flex flex-wrap items-center gap-2 mt-2 text-xs sm:text-sm text-slate-600">
+                                            <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-semibold text-xs">
+                                                {{ post.run_type }}
+                                            </span>
+                                            <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-semibold text-xs border border-emerald-200/60">
+                                                {{ post.target_pace }}
+                                            </span>
+                                            <span class="flex items-center gap-1 text-slate-500 truncate max-w-[220px] sm:max-w-xs font-medium">
+                                                <i class="fa-solid fa-location-dot text-slate-700 text-xs"></i>
+                                                <span class="truncate">{{ post.venue_name }}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Side: Shoe Icon + Amber Spots Pill (11/18) + Distance + Join Button -->
+                                <div class="flex items-center gap-3 flex-shrink-0">
+                                    <div class="flex flex-col items-center justify-center text-right min-w-[64px]">
+                                        <i class="fa-solid fa-shoe-prints text-slate-700 text-lg mb-1 -rotate-45"></i>
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold tracking-tight shadow-sm
+                                                     {% if post.is_full %}bg-rose-100 text-rose-800{% else %}bg-amber-400 text-slate-900{% endif %}">
+                                            {{ post.spots_taken }}/{{ post.max_runners }}
+                                        </span>
+                                        <span class="text-xs font-semibold text-slate-400 mt-1">
+                                            {{ post.route_distance_km }}km
+                                        </span>
+                                    </div>
+
+                                    {% if user.is_authenticated %}
+                                        <form method="POST" action="{% url 'home:toggle_join_run' post.id %}" class="hidden sm:block">
+                                            {% csrf_token %}
+                                            {% if user in post.participants.all %}
+                                                <button type="submit" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-rose-100 hover:text-rose-700 transition">
+                                                    Joined
+                                                </button>
+                                            {% elif post.is_full %}
+                                                <button type="button" disabled class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 cursor-not-allowed">
+                                                    Full
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-emerald-600 transition">
+                                                    Join
+                                                </button>
+                                            {% endif %}
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endfor %}
+
+        {% else %}
+            <!-- SAMPLE PREVIEW WHEN DATABASE IS EMPTY -->
+            <div class="bg-amber-50 border border-amber-200/80 text-amber-900 px-4 py-2.5 rounded-xl text-xs font-medium">
+                <i class="fa-solid fa-circle-info mr-1.5"></i>No runs scheduled in the database for <strong>{{ selected_date }}</strong> yet—showing sample preview cards below.
+            </div>
+
+            <!-- 4:05 PM | 1 meet -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+                <button type="button" onclick="toggleTimeSlot('demo-slot-1', 'demo-chev-1')" class="w-full px-5 py-3.5 bg-slate-50/70 border-b border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-base sm:text-lg font-extrabold text-slate-900">4:05 PM</span>
+                        <span class="text-slate-300">|</span>
+                        <span class="text-sm sm:text-base text-slate-500 font-medium">1 meet</span>
+                    </div>
+                    <i id="demo-chev-1" class="fa-solid fa-chevron-down text-slate-500 text-sm"></i>
+                </button>
+                <div id="demo-slot-1" class="divide-y divide-slate-100">
+                    <article class="p-4 sm:px-6 sm:py-5 hover:bg-slate-50/80 transition flex items-center justify-between gap-4">
+                        <div class="flex items-start gap-3.5 sm:gap-4 min-w-0 flex-1">
+                            <div class="w-12 h-12 rounded-full bg-rose-800 text-white flex items-center justify-center font-extrabold text-sm flex-shrink-0 mt-0.5">
+                                DB
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">STRIDEBOYZ</p>
+                                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 truncate mt-0.5">
+                                    APAS 8 runners EASY PACE ‼️ ALL LE...
+                                </h3>
+                                <div class="flex flex-wrap items-center gap-2 mt-2 text-xs sm:text-sm text-slate-600">
+                                    <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-semibold text-xs">Social</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-semibold text-xs border border-emerald-200/60">6:15/km</span>
+                                    <span class="flex items-center gap-1 text-slate-500 font-medium">
+                                        <i class="fa-solid fa-location-dot text-slate-700 text-xs"></i> CEBU IT PARK
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center min-w-[64px]">
+                            <i class="fa-solid fa-shoe-prints text-slate-700 text-lg mb-1 -rotate-45"></i>
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-400 text-slate-900">11/18</span>
+                            <span class="text-xs font-semibold text-slate-400 mt-1">2.9km</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- 5:00 PM | 3 meets -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+                <button type="button" onclick="toggleTimeSlot('demo-slot-2', 'demo-chev-2')" class="w-full px-5 py-3.5 bg-slate-50/70 border-b border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-base sm:text-lg font-extrabold text-slate-900">5:00 PM</span>
+                        <span class="text-slate-300">|</span>
+                        <span class="text-sm sm:text-base text-slate-500 font-medium">3 meets</span>
+                    </div>
+                    <i id="demo-chev-2" class="fa-solid fa-chevron-down text-slate-500 text-sm"></i>
+                </button>
+                <div id="demo-slot-2" class="divide-y divide-slate-100">
+                    <article class="p-4 sm:px-6 sm:py-5 hover:bg-slate-50/80 transition flex items-center justify-between gap-4">
+                        <div class="flex items-start gap-3.5 sm:gap-4 min-w-0 flex-1">
+                            <div class="w-12 h-12 rounded-full bg-sky-100 text-sky-900 border border-sky-200 flex items-center justify-center font-black text-sm flex-shrink-0 mt-0.5">
+                                HQ
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">HQ RUN CLUB CEBU</p>
+                                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 truncate mt-0.5">
+                                    RUSH HOUR OPEN RUN AT HQ CEBU...
+                                </h3>
+                                <div class="flex flex-wrap items-center gap-2 mt-2 text-xs sm:text-sm text-slate-600">
+                                    <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-semibold text-xs">Social</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-semibold text-xs border border-emerald-200/60">5:45/km</span>
+                                    <span class="flex items-center gap-1 text-slate-500 font-medium">
+                                        <i class="fa-solid fa-location-dot text-slate-700 text-xs"></i> Ayala Cebu Business Park
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center min-w-[64px]">
+                            <i class="fa-solid fa-shoe-prints text-slate-700 text-lg mb-1 -rotate-45"></i>
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-400 text-slate-900">27/30</span>
+                            <span class="text-xs font-semibold text-slate-400 mt-1">4.0km</span>
+                        </div>
+                    </article>
+
+                    <article class="p-4 sm:px-6 sm:py-5 hover:bg-slate-50/80 transition flex items-center justify-between gap-4">
+                        <div class="flex items-start gap-3.5 sm:gap-4 min-w-0 flex-1">
+                            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center justify-center font-black text-xs flex-shrink-0 mt-0.5">
+                                PP
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">👍 PACE POSITIVE 💗</p>
+                                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 truncate mt-0.5">
+                                    Speed Coaching with Coach Ryke [ex...
+                                </h3>
+                                <div class="flex flex-wrap items-center gap-2 mt-2 text-xs sm:text-sm text-slate-600">
+                                    <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-semibold text-xs">Training</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-semibold text-xs border border-emerald-200/60">4:50/km</span>
+                                    <span class="flex items-center gap-1 text-slate-500 font-medium">
+                                        <i class="fa-solid fa-location-dot text-slate-700 text-xs"></i> ABELLANA OVAL TRACK
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center min-w-[64px]">
+                            <i class="fa-solid fa-shoe-prints text-slate-700 text-lg mb-1 -rotate-45"></i>
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-400 text-slate-900">6/7</span>
+                            <span class="text-xs font-semibold text-slate-400 mt-1">3.3km</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        {% endif %}
+
+    </main>
+
+    <!-- FLOATING BOTTOM SEARCH BAR -->
+    <div class="fixed bottom-5 inset-x-0 z-40 px-4 pointer-events-none">
+        <div class="max-w-xl mx-auto pointer-events-auto">
+            <form method="GET" action=""
+                  class="bg-white/95 backdrop-blur-md rounded-full shadow-lg border border-slate-200/90 px-5 py-3 flex items-center justify-between gap-3 focus-within:ring-2 focus-within:ring-emerald-500 transition">
+                <input type="hidden" name="date" value="{{ selected_date }}">
+                {% if run_type_filter %}
+                    <input type="hidden" name="type" value="{{ run_type_filter }}">
+                {% endif %}
+                
+                <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
+                <input id="searchInput"
+                       type="text"
+                       name="q"
+                       value="{{ search_query }}"
+                       placeholder="Search..."
+                       class="w-full bg-transparent text-slate-800 placeholder-slate-400 text-sm sm:text-base font-medium focus:outline-none">
+                
+                {% if search_query %}
+                    <a href="?date={{ selected_date }}{% if run_type_filter %}&type={{ run_type_filter }}{% endif %}"
+                       class="text-slate-400 hover:text-slate-600 text-sm px-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                {% endif %}
+
+                <button type="submit" title="Search near location" class="text-slate-800 hover:text-emerald-600 transition pl-2 border-l border-slate-200">
+                    <i class="fa-solid fa-location-dot text-lg"></i>
+                </button>
             </form>
         </div>
-    </nav>
-    
-    <div class="container">
-        <h1>Welcome, {{ user.username }}!</h1>
-        <p>This is your main dashboard. Once we build the models, your upcoming runs will appear here.</p>
     </div>
+
+    <script>
+        function toggleTimeSlot(slotId, chevronId) {
+            const slot = document.getElementById(slotId);
+            const chevron = document.getElementById(chevronId);
+            if (!slot) return;
+            slot.classList.toggle('hidden');
+            if (chevron) {
+                chevron.classList.toggle('rotate-180');
+            }
+        }
+    </script>
 </body>
 </html>
