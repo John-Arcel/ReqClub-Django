@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | ReqClub</title>
+    
+    <!-- Link to the decoupled Register CSS file -->
+    <link rel="stylesheet" href="{% static 'css/register/register.css' %}">
+</head>
+<body>
+    
+    <!-- The background image quotes now perfectly match your working login page! -->
+    <div class="app-window" style="background-image: url({% static 'images/register/register_bg.jpg' %});">
+        
+        <!-- Using right-panel so it sits on the opposite side of your login form -->
+        <div class="right-panel">
+            <div class="form-wrapper">
+                <h1>Join ReqClub</h1>
+                
+                <form method="post" class="auth-form">
+                    {% csrf_token %}
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    
+                    <!-- Catches the "Username already exists" error from your views.py -->
+                    {% if error %}
+                        <div style="color: #d93025; font-size: 14px; font-weight: bold; margin-bottom: 10px;">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    
+                    <button type="submit" class="auth-btn">Sign up</button>
+                </form>
+                
+                <div class="auth-footer">
+                    Already have an account? <a href="{% url 'login:login' %}">Log in here</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+</body>
+</html>

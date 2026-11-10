@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | ReRun</title>
+    <!-- Loads the CSS file from the profile app so we don't have to duplicate it! -->
+    <link rel="stylesheet" href="{% static 'css/user_profile/profile.css' %}">
+</head>
+<body>
+    <nav>
+        <div class="nav-brand"><a href="{% url 'home:home' %}" style="text-decoration: none; color: inherit;">ReqClub</a></div>
+        <a href="{% url 'home:home' %}" class="back-link">Back to Dashboard</a>
+    </nav>
+    
+    <div class="container">
+        <div class="settings-card">
+            <h2>Account Settings</h2>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group" style="flex-direction: row; align-items: center; justify-content: space-between;">
+                    <label style="margin-bottom: 0;">Enable Dark Mode</label>
+                    <input type="checkbox" name="dark_mode" {% if settings.dark_mode %}checked{% endif %}>
+                </div>
+                
+                <div class="form-group" style="flex-direction: row; align-items: center; justify-content: space-between; border-top: 1px solid #E8E8E8; padding-top: 20px;">
+                    <label style="margin-bottom: 0;">Email Notifications</label>
+                    <input type="checkbox" name="email_notifications" {% if settings.email_notifications %}checked{% endif %}>
+                </div>
+                
+                <button type="submit" class="save-btn" style="margin-top: 30px;">Save Preferences</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

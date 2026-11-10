@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | ReqClub</title>
+    
+    <!-- Link to the new decoupled CSS file -->
+    <link rel="stylesheet" href="{% static 'css/login/login.css' %}">
+</head>
+<body>
+    
+    <!-- The background image is safely applied here as an inline style so Django can read it! -->
+    <div class="app-window" style="background-image: url({% static 'images/login/login_bg.jpg' %});">
+        
+        <div class="left-panel">
+            <div class="form-wrapper">
+                <h1>Welcome Back</h1>
+                
+                <form method="post" class="auth-form">
+                    {% csrf_token %}
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit" class="auth-btn">Log in</button>
+                </form>
+                
+                <div class="auth-footer">
+                    Don't have an account? <a href="{% url 'register:register' %}">Sign up here</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+</body>
+</html>
