@@ -38,6 +38,60 @@ class RunPost(models.Model):
     ]
 
     club = models.ForeignKey(
+        RunningClub,
+        on_delete=models.CASCADE,
+        related_name="run_posts"
+    )
+
+    title = models.CharField(max_length=140)
+
+    # NEW FIELDS
+    description = models.TextField(blank=True)
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="created_run_posts"
+    )
+
+    run_type = models.CharField(
+        max_length=20,
+        choices=RUN_TYPE_CHOICES,
+        default="Social"
+    )
+
+    venue_name = models.CharField(max_length=120)
+
+    route_distance_km = models.DecimalField(
+        max_digits=4,
+        decimal_places=1
+    )
+
+    target_pace = models.CharField(max_length=30, default="6:00/km")
+
+    date = models.DateField(default=timezone.now)
+    start_time = models.TimeField()
+    max_runners = models.PositiveIntegerField(default=20)
+
+    participants = models.ManyToManyField(
+        User,
+        related_name="joined_runs",
+        blank=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    RUN_TYPE_CHOICES = [
+        ("Social", "Social"),
+        ("Training", "Training"),
+        ("Tempo", "Tempo"),
+        ("Long Run", "Long Run"),
+        ("Intervals", "Intervals"),
+        ("Race", "Race"),
+    ]
+
+    club = models.ForeignKey(
         RunningClub, 
         on_delete=models.CASCADE, 
         related_name="run_posts"
@@ -86,3 +140,17 @@ class RunPost(models.Model):
     @property
     def is_full(self):
         return self.spots_taken >= self.max_runners
+
+
+description = models.TextField(
+    blank=True,
+    help_text="Describe your running meetup."
+)
+
+created_by = models.ForeignKey(
+    User,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name="created_run_posts"
+)

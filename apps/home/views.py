@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.db.models import Q
 from .models import RunPost, RunningClub
-
+from .forms import RunPostForm
 
 def home_dashboard(request):
     today = timezone.localdate()
@@ -84,3 +84,42 @@ def toggle_join_run(request, run_id):
         elif not run_post.is_full:
             run_post.participants.add(request.user)
     return redirect(request.META.get("HTTP_REFERER", "reqclub_dashboard"))
+
+
+@login_required
+def create_run(request):
+
+    if request.method == "POST":
+        form = RunPostForm(request.POST)
+
+        if form.is_valid():
+            run_post = form.save(commit=False)
+
+            # Set the user who created the meetup
+            run_post.created_by = request.user
+
+            # Use the default ReqClub community
+            community_club, created = RunningClub.objects.get_or_create(
+                slug="community-runs",
+                defaults={
+                    "name": "ReqClub Community",
+                    "city": "Cebu City",
+                    "avatar_Bg": "bg-amber-500"
+                }
+            )
+
+            run_post.club = community_club
+            run_post.save()
+
+            return redirect(
+                f"/?date={run_post.date.strftime('%Y-%m-%d')}"
+            )
+
+    else:
+        form = RunPostForm()
+
+    return render(
+        request,
+        "home/create_run.html",
+        {"form": form}
+    )
