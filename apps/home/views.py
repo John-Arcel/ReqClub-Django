@@ -2,12 +2,14 @@ from datetime import datetime, timedelta
 from itertools import groupby
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from django.utils import timezone
 from django.db.models import Q
 from .models import RunPost, RunningClub
 from .forms import RunPostForm
 
-def home_dashboard(request):
+
+def _get_home_context(request, form=None, open_create_modal=False):
     today = timezone.localdate()
 
     # 1. Selected date from query param (?date=YYYY-MM-DD)
@@ -62,7 +64,10 @@ def home_dashboard(request):
             "posts": posts_list,
         })
 
-    context = {
+    if form is None:
+        form = RunPostForm(initial={"date": selected_date})
+
+    return {
         "date_strip": date_strip,
         "selected_date": selected_date.strftime("%Y-%m-%d"),
         "grouped_runs": grouped_runs,
@@ -70,8 +75,14 @@ def home_dashboard(request):
         "run_type_filter": run_type_filter,
         "run_types": [choice[0] for choice in RunPost.RUN_TYPE_CHOICES],
         "total_runs_today": runs_qs.count(),
+        "form": form,
+        "open_create_modal": open_create_modal,
     }
-    # Points to templates/home/dashboard.html
+
+
+def home_dashboard(request):
+    open_modal = request.GET.get("create") == "1"
+    context = _get_home_context(request, open_create_modal=open_modal)
     return render(request, "home/home.html", context)
 
 
@@ -83,12 +94,11 @@ def toggle_join_run(request, run_id):
             run_post.participants.remove(request.user)
         elif not run_post.is_full:
             run_post.participants.add(request.user)
-    return redirect(request.META.get("HTTP_REFERER", "reqclub_dashboard"))
+    return redirect(request.META.get("HTTP_REFERER", "home:home"))
 
 
 @login_required
 def create_run(request):
-
     if request.method == "POST":
         form = RunPostForm(request.POST)
 
@@ -99,27 +109,23 @@ def create_run(request):
             run_post.created_by = request.user
 
             # Use the default ReqClub community
-            community_club, created = RunningClub.objects.get_or_create(
+            community_club, _ = RunningClub.objects.get_or_create(
                 slug="community-runs",
                 defaults={
                     "name": "ReqClub Community",
                     "city": "Cebu City",
-                    "avatar_Bg": "bg-amber-500"
-                }
+                    "avatar_Bg": "bg-amber-500",
+                },
             )
 
             run_post.club = community_club
             run_post.save()
 
             return redirect(
-                f"/?date={run_post.date.strftime('%Y-%m-%d')}"
+                f"{reverse('home:home')}?date={run_post.date.strftime('%Y-%m-%d')}"
             )
 
-    else:
-        form = RunPostForm()
+        context = _get_home_context(request, form=form, open_create_modal=True)
+        return render(request, "home/home.html", context)
 
-    return render(
-        request,
-        "home/create_run.html",
-        {"form": form}
-    )
+    return redirect(f"{reverse('home:home')}?create=1")
