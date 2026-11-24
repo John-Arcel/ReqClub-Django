@@ -34,8 +34,11 @@ def _get_home_context(request, form=None, open_create_modal=False):
         })
 
     # 3. Filter Run Posts
-    runs_qs = RunPost.objects.select_related("club").prefetch_related("participants").filter(
-        date=selected_date
+    runs_qs = (
+        RunPost.objects
+        .select_related("club", "created_by")
+        .prefetch_related("participants")
+        .filter(date=selected_date)
     )
 
     search_query = request.GET.get("q", "").strip()
@@ -90,10 +93,14 @@ def home_dashboard(request):
 def toggle_join_run(request, run_id):
     if request.method == "POST":
         run_post = get_object_or_404(RunPost, id=run_id)
-        if request.user in run_post.participants.all():
-            run_post.participants.remove(request.user)
-        elif not run_post.is_full:
-            run_post.participants.add(request.user)
+
+        # Host is auto-joined and stays in the run; only non-hosts can join/leave
+        if run_post.created_by != request.user:
+            if request.user in run_post.participants.all():
+                run_post.participants.remove(request.user)
+            elif not run_post.is_full:
+                run_post.participants.add(request.user)
+
     return redirect(request.META.get("HTTP_REFERER", "home:home"))
 
 
@@ -105,7 +112,7 @@ def create_run(request):
         if form.is_valid():
             run_post = form.save(commit=False)
 
-            # Set the user who created the meetup
+            # Set the creator as the host
             run_post.created_by = request.user
 
             # Use the default ReqClub community
@@ -120,6 +127,9 @@ def create_run(request):
 
             run_post.club = community_club
             run_post.save()
+
+            # Auto-join the host to the run
+            run_post.participants.add(request.user)
 
             return redirect(
                 f"{reverse('home:home')}?date={run_post.date.strftime('%Y-%m-%d')}"
